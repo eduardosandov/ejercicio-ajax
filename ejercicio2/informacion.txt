@@ -1,0 +1,1 @@
+Esta es una practica utilizando html, js, php, con Ajax utilizando el metodo POST
