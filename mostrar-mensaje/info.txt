@@ -1,0 +1,1 @@
+Esta es una practica con html, ajax, php utilizando el metodo GET
