@@ -11,5 +11,10 @@ class laboratorio{
         $this->laboratorios = $resultado->fetch_all(MYSQLI_ASSOC);
         return $this->laboratorios;
     }
+
+    function editar($id,$nombre){
+        $sql="UPDATE laboratorio SET nombre='$nombre' where id='$id'";
+        $resultado = $this->acceso->query($sql);
+    }
 }
 ?>
