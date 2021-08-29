@@ -4,11 +4,65 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="lib/bootstrap.css">
+    <link rel="stylesheet" href="./lib/bootstrap.css">
     <link rel="stylesheet" href="lib/datatables.min.css">
     <title>Datatables</title>
 </head>
 <body>
+     <!-- Modal -->
+<div class="modal fade" id="editar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Editar laboratorio</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="form-editar">
+              <div class="form-group">
+                  <label for="">Laboratorio: </label>
+                  <input type="text" id="nombre_laboratorio" class="form-control">
+                  <input type="hidden" id="id">
+              </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="eliminar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">eliminar laboratorio</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="form-eliminar">
+              <div class="form-group">
+                  <label for="">Laboratorio: </label>
+                  <label id="laboratorio_eliminar"></label>
+                  <input type="hidden" id="id_laboratorio">
+              </div>
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- --/modal -->
     <div class="container">
         <div class="jumbotrom jumbotron-fluid">
             <div class="container">
@@ -20,6 +74,7 @@
             <thead>
                 <th>Id</th>
                 <th>Nombre</th>
+                <th>Acciones</th>
             </thead>
             <tbody>
 
@@ -31,18 +86,35 @@
     <script src="lib/datatables.min.js"></script>
     <script>
     $(document).ready(function() {
-        $('#example').DataTable({
-            "ajax": "data/objects.txt",
+        var funcion='listar';
+       let datatable = $('#example').DataTable({
+            "ajax": {
+                "url": "controlador/laboratorioControlador.php",
+                "method": "POST",
+                "data": {funcion:funcion}
+            },
         "columns": [
-            { "data": "name" },
-            { "data": "position" },
-            { "data": "office" },
-            { "data": "extn" },
-            { "data": "start_date" },
-            { "data": "salary" }
+            { "data": "id" },
+            { "data": "nombre" },
+            { "defaultContent": `<button class="editar btn btn-success" type="button" data-toggle="modal" data-target="#editar">Editar</button>
+                                <button class="eliminar btn btn-danger" type="button" data-toggle="modal" data-target="#eliminar">Eliminar</button>`}
         ],
         "language": espanol
     });
+    $('#example tbody').on('click','.editar', function(){
+        let data = datatable.row($(this).parents()).data();
+        $('#nombre_laboratorio').val(data.nombre);
+        $('#id').val(data.id);
+    })
+    $('#form-editar').submit(e=>{
+        let id =$('#id').val();
+        let nombre=$('#nombre_laboratorio').val();
+        funcion='editar';
+        $.post('controlador/laboratorioControlador.php',{id,nombre,funcion},(response)=>{
+
+        })
+
+    })
 } );
     let espanol = {
     "aria": {
